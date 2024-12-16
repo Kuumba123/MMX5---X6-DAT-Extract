@@ -14,13 +14,14 @@ def process_arc_file(input_file_path, output_directory):
     while sector != 0:
         size = int.from_bytes(ms[offset + 4:offset + 7], byteorder='little')
         backup = offset
+        
+        if size < 0x4:
+            print("ERROR: Invalid File Size")
+            return
 
         arc_size = int.from_bytes(data[sector * 0x800 + 4:sector * 0x800 + 7], byteorder='little')
 
-        if arc_size < 0x4:
-            print("ERROR: Invalid File Size")
-            return
-        elif arc_size != size:
+        if arc_size != size:
             file_name = f"ARC_{fileId:X}.BIN"
         else:
             file_name = f"ARC_{fileId:X}.ARC"
