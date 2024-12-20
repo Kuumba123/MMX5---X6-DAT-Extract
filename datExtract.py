@@ -1,7 +1,7 @@
 import sys
 import os
 
-def process_arc_file(input_file_path, output_directory):
+def process_arc_file(input_file_path, output_directory,baseName):
     with open(input_file_path, "rb") as file:
         data = file.read()
 
@@ -22,9 +22,9 @@ def process_arc_file(input_file_path, output_directory):
         arc_size = int.from_bytes(data[sector * 0x800 + 4:sector * 0x800 + 7], byteorder='little')
 
         if arc_size != size:
-            file_name = f"ARC_{fileId:X}.BIN"
+            file_name = f"{baseName}_{fileId:X}.BIN"
         else:
-            file_name = f"ARC_{fileId:X}.ARC"
+            file_name = f"{baseName}_{fileId:X}.ARC"
 
         offset = sector * 0x800
         file_data = ms[offset:offset + size]
@@ -45,15 +45,19 @@ def process_arc_file(input_file_path, output_directory):
     print("Program Completed, " + str(fileId) + " Files were created.")
 
 #Start of Program
-if len(sys.argv) != 3:
+if len(sys.argv) < 3:
     print("Made by PogChampGuy AKA Kuumba")
     print("This Program is used for extracting MegaMan X5/X6 DAT files into ARC/BIN files")
-    print("Usage: python main.py <input_file> <output_directory>")
+    print("Usage: python main.py <input_file> <output_directory> [base_fileName]")
 else:
     input_file_path = sys.argv[1]
     output_directory = sys.argv[2]
 
+    baseName = "ARC"
+    if len(sys.argv) == 4:
+        baseName = sys.argv[3]
+    
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    process_arc_file(input_file_path, output_directory)
+    process_arc_file(input_file_path, output_directory,baseName)
