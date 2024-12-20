@@ -1,3 +1,5 @@
 /.vscode
 /MMX5 & X6 DAT Extract.code-workspace
 /__pycache__
+*.BIN
+*.DAT
