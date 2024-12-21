@@ -17,7 +17,7 @@ def process_arc_file(input_file_path, output_directory,baseName):
         
         if size < 0x4:
             print("ERROR: Invalid File Size")
-            return
+            sys.exit(1)
 
         arc_size = int.from_bytes(data[sector * 0x800 + 4:sector * 0x800 + 7], byteorder='little')
 
@@ -43,6 +43,7 @@ def process_arc_file(input_file_path, output_directory,baseName):
         sector = int.from_bytes(ms[offset:offset + 3], byteorder='little')
     #=========
     print("Program Completed, " + str(fileId) + " Files were created.")
+    sys.exit(0)
 
 #Start of Program
 if len(sys.argv) < 3:
@@ -60,4 +61,8 @@ else:
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    process_arc_file(input_file_path, output_directory,baseName)
+    try:
+        process_arc_file(input_file_path, output_directory,baseName)
+    except Exception as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        sys.exit(1)
